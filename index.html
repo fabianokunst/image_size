@@ -291,6 +291,11 @@ legend { font-weight: 600; padding: 0; margin: 0 0 10px; }
         <p class="hint" data-i18n="bgHint">Usada nas laterais e em áreas transparentes no JPG.</p>
       </fieldset>
     </div>
+    <fieldset>
+      <legend data-i18n="tonesLegend">Cores</legend>
+      <label class="check"><input type="checkbox" id="tones" checked> <span data-i18n="tones">Manter tons originais</span></label>
+      <p class="hint" data-i18n="tonesHint">Usa a nitidez da IA sem clarear fundos nem mudar as cores.</p>
+    </fieldset>
   </section>
 
   <div class="actions">
@@ -357,6 +362,7 @@ window.I18N = {
     fmtLegend: 'Formato do arquivo', fmtHint: 'JPG gera arquivos menores. PNG mantém a transparência.',
     ratioLegend: 'Proporção', square: 'Deixar quadrada', squareHint: 'Completa as laterais com a cor de fundo.',
     bgLegend: 'Cor de fundo', bgHint: 'Usada nas laterais e em áreas transparentes no JPG.',
+    tonesLegend: 'Cores', tones: 'Manter tons originais', tonesHint: 'Usa a nitidez da IA sem clarear fundos nem mudar as cores.',
     zip: 'Baixar todas (.zip)', zipAll: n => n ? `Baixar todas (${n})` : 'Baixar todas', zipHint: 'As imagens vêm juntas num arquivo .zip.', zipBusy: 'Preparando .zip…', clear: 'Limpar lista', listAria: 'Imagens',
     cmpAria: 'Comparação antes e depois', zoomOn: 'Ver em tamanho real', zoomOff: 'Ajustar à tela',
     beforeAlt: 'Antes: redimensionamento comum', afterAlt: 'Depois: ampliada com IA', before: 'Antes', after: 'Depois',
@@ -393,6 +399,7 @@ window.I18N = {
     fmtLegend: 'Formato del archivo', fmtHint: 'JPG genera archivos más livianos. PNG conserva la transparencia.',
     ratioLegend: 'Proporción', square: 'Hacerla cuadrada', squareHint: 'Completa los lados con el color de fondo.',
     bgLegend: 'Color de fondo', bgHint: 'Se usa en los lados y en las áreas transparentes en JPG.',
+    tonesLegend: 'Colores', tones: 'Mantener tonos originales', tonesHint: 'Usa la nitidez de la IA sin aclarar fondos ni cambiar los colores.',
     zip: 'Descargar todas (.zip)', zipAll: n => n ? `Descargar todas (${n})` : 'Descargar todas', zipHint: 'Las imágenes vienen juntas en un archivo .zip.', zipBusy: 'Preparando .zip…', clear: 'Vaciar lista', listAria: 'Imágenes',
     cmpAria: 'Comparación antes y después', zoomOn: 'Ver a tamaño real', zoomOff: 'Ajustar a la pantalla',
     beforeAlt: 'Antes: redimensionado común', afterAlt: 'Después: ampliada con IA', before: 'Antes', after: 'Después',
@@ -429,6 +436,7 @@ window.I18N = {
     fmtLegend: 'File format', fmtHint: 'JPG makes smaller files. PNG keeps transparency.',
     ratioLegend: 'Aspect ratio', square: 'Make it square', squareHint: 'Fills the sides with the background color.',
     bgLegend: 'Background color', bgHint: 'Used for the sides and for transparent areas in JPG.',
+    tonesLegend: 'Colors', tones: 'Keep original tones', tonesHint: 'Keeps the AI’s sharpness without brightening backgrounds or shifting colors.',
     zip: 'Download all (.zip)', zipAll: n => n ? `Download all (${n})` : 'Download all', zipHint: 'Images come together in one .zip file.', zipBusy: 'Preparing .zip…', clear: 'Clear list', listAria: 'Images',
     cmpAria: 'Before and after comparison', zoomOn: 'View actual size', zoomOff: 'Fit to screen',
     beforeAlt: 'Before: standard resize', afterAlt: 'After: upscaled with AI', before: 'Before', after: 'After',
@@ -575,7 +583,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     engine: $('#engine'), list: $('#list'), tpl: $('#itemTpl'), custom: $('#custom'), customRadio: $('#customRadio'),
     sizeHint: $('#sizeHint'), square: $('#square'), bg: $('#bg'), bgHex: $('#bgHex'), saveNote: $('#saveNote'),
     cmpWrap: $('#cmpWrap'), cmpScroll: $('#cmpScroll'), cmp: $('#cmp'), before: $('#before'), after: $('#after'),
-    slider: $('#slider'), zoom: $('#zoom'), cmpTitle: $('#cmpTitle'), theme: $('#theme'), accel: $('#accel'), listFoot: $('#listFoot'), zipHint: $('#zipHint')
+    slider: $('#slider'), zoom: $('#zoom'), cmpTitle: $('#cmpTitle'), theme: $('#theme'), accel: $('#accel'), tones: $('#tones'), listFoot: $('#listFoot'), zipHint: $('#zipHint')
   };
   const items = [];
   let model = null, engine = 'loading', busy = false, downloads = null, selectedId = null, uid = 0, zipBusy = false;
@@ -594,9 +602,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     const r = document.querySelector('input[name="size"]:checked').value;
     const size = r === 'custom' ? parseInt(el.custom.value, 10) : parseInt(r, 10);
     const valid = Number.isFinite(size) && size >= 64 && size <= 6000;
-    return { size, valid, fmt: document.querySelector('input[name="fmt"]:checked').value, square: el.square.checked, bg: el.bg.value };
+    return { size, valid, fmt: document.querySelector('input[name="fmt"]:checked').value, square: el.square.checked, bg: el.bg.value, tones: el.tones.checked };
   }
-  const keyOf = s => [s.size, s.fmt, s.square, s.bg].join('|');
+  const keyOf = s => [s.size, s.fmt, s.square, s.bg, s.tones].join('|');
   function dimsFor(it, s) {
     const f = s.size / Math.max(it.w, it.h);
     const w = Math.max(1, Math.round(it.w * f)), h = Math.max(1, Math.round(it.h * f));
@@ -744,6 +752,42 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     }
   }
 
+  // "Manter tons originais": soma ao resultado a diferença suavizada (original − IA).
+  // Só a cor de cada região volta; os detalhes finos continuam sendo os da IA.
+  function boxesForGauss(sigma) {
+    const n = 3, wIdeal = Math.sqrt((12 * sigma * sigma) / n + 1);
+    let wl = Math.floor(wIdeal); if (wl % 2 === 0) wl--;
+    const m = Math.round((12 * sigma * sigma - n * wl * wl - 4 * n * wl - 3 * n) / (-4 * wl - 4));
+    return [0, 1, 2].map(i => (i < m ? wl : wl + 2));
+  }
+  function boxBlur(src, dst, w, h, r, horizontal) {
+    const inv = 1 / (2 * r + 1), len = horizontal ? w : h, lines = horizontal ? h : w;
+    const stride = horizontal ? 1 : w, lineStep = horizontal ? w : 1;
+    for (let l = 0; l < lines; l++) {
+      const base = l * lineStep;
+      const at = k => src[base + Math.min(len - 1, Math.max(0, k)) * stride];
+      let acc = 0;
+      for (let k = -r; k <= r; k++) acc += at(k);
+      for (let i = 0; i < len; i++) { dst[base + i * stride] = acc * inv; acc += at(i + r + 1) - at(i - r); }
+    }
+  }
+  function gaussBlur(ch, w, h, sigma) {
+    const tmp = new Float32Array(ch.length);
+    for (const b of boxesForGauss(sigma)) { const r = (b - 1) / 2; boxBlur(ch, tmp, w, h, r, true); boxBlur(tmp, ch, w, h, r, false); }
+  }
+  function keepTones(rgb, ref, sigma) {
+    const w = rgb.width, h = rgb.height, ctx = rgb.getContext('2d');
+    const img = ctx.getImageData(0, 0, w, h), o = img.data;
+    const r = ref.getContext('2d').getImageData(0, 0, w, h).data;
+    const D = new Float32Array(w * h);
+    for (let c = 0; c < 3; c++) {
+      for (let i = 0, j = c; i < D.length; i++, j += 4) D[i] = r[j] - o[j];
+      gaussBlur(D, w, h, sigma);
+      for (let i = 0, j = c; i < D.length; i++, j += 4) o[j] = o[j] + D[i];
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+
   /* ---------- Lista ---------- */
   function hasAlphaPixels(ctx, w, h) {
     const d = ctx.getImageData(0, 0, w, h).data;
@@ -850,13 +894,14 @@ https://github.com/nodeca/pako/blob/main/LICENSE
           const sc = inMax / Math.max(it.w, it.h);
           const inW = Math.max(1, Math.round(it.w * sc)), inH = Math.max(1, Math.round(it.h * sc));
           if (!it.sr || it.sr.w !== inW || it.sr.h !== inH) {
-            const base = it.hasAlpha ? bleed(it) : it.orig;
+            const base = it.hasAlpha ? (it.bleedC || (it.bleedC = bleed(it))) : it.orig;
             const src = (inW === it.w && inH === it.h) ? base : resizeHQ(base, inW, inH);
             const out = await upscaleSafe(src.getContext ? src : drawTo(src, inW, inH), p => { it.progress = p; updateProgress(it); });
             it.sr = { w: inW, h: inH, canvas: out };
           }
           rgb = resizeHQ(it.sr.canvas, d.w, d.h);
           if (rgb === it.sr.canvas) rgb = drawTo(rgb, d.w, d.h);
+          if (s.tones) keepTones(rgb, resizeHQ(it.hasAlpha ? (it.bleedC || (it.bleedC = bleed(it))) : it.orig, d.w, d.h), 4 * d.w / it.w);
           if (it.hasAlpha) applyAlpha(rgb, it, d);
           it.mode = 'ai';
         } else {
@@ -1035,6 +1080,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
   el.custom.addEventListener('focus', () => { el.customRadio.checked = true; refresh(); });
   el.custom.addEventListener('input', () => { el.customRadio.checked = true; refresh(); });
   el.square.addEventListener('change', refresh);
+  el.tones.addEventListener('change', refresh);
   el.bg.addEventListener('input', refresh);
   el.go.addEventListener('click', processAll);
   el.zip.addEventListener('click', saveZip);
