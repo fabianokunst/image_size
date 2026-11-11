@@ -2,17 +2,25 @@
 
 Caixa de ferramentas web para imagens: redimensionar e ampliar com IA, enquadrar, ajustar e exportar em lote. Roda 100% no navegador: nenhuma imagem é enviada para servidor.
 
-## Abas
+## Como a página é organizada
 
-As configurações ficam em abas; todas se combinam num único processamento. Abas que estão alterando as imagens mostram um ponto indicador.
+Tudo fica numa única rolagem, na ordem do trabalho. Todas as opções se combinam num único processamento.
 
-| Aba | O que tem |
+| Etapa | O que tem |
 |---|---|
-| **Redimensionar** (base) | Ampliar com IA, Restaurar ou Só converter; tamanho final; tamanhos extras; manter tons originais |
-| **Enquadrar** | Proporção, centralizar produto com margem, cor de fundo, fundo branco puro |
-| **Ajustes** | Brilho, contraste, saturação, nitidez |
-| **Marca d'água** | Logo, posição, opacidade, tamanho |
-| **Exportar** | Formato, qualidade, tamanho máximo em KB, PNG com perda, padrão de nome |
+| **1 Imagens** | Área para arrastar ou escolher as imagens; lista com miniatura, dimensões, tamanho antes/depois e download de cada uma |
+| **2 Configurações** | Preset no topo e as seções abaixo, sempre visíveis. As que estão alterando as imagens mostram o selo “em uso” |
+| **3 Resultado** | Comparador antes/depois da imagem escolhida na lista, com zoom em tamanho real |
+
+| Seção | O que tem |
+|---|---|
+| **Tamanho e IA** | Ampliar com IA, Restaurar ou Só converter; tamanho final; tamanhos extras; manter tons originais |
+| **Enquadramento** | Proporção, centralizar produto com margem, cor de fundo, fundo branco puro |
+| **Cores e ajustes** | Brilho, contraste, saturação, nitidez |
+| **Marca d'água** | Logo, posição, opacidade, tamanho (as opções aparecem ao ligar a marca d'água) |
+| **Exportação** | Formato, qualidade, tamanho máximo em KB, PNG com perda, padrão de nome |
+
+A barra de ações fica presa ao pé da tela: mostra o andamento e o botão **Processar**; quando tudo está pronto, vira **Baixar todas** (e **Salvar numa pasta** no Chrome/Edge).
 
 ## Funções em detalhe
 
@@ -58,7 +66,7 @@ Para uso sem internet nem servidor, distribua `dist-single/toolbox-web.html`: ab
 .github/workflows/      publicação automática no GitHub Pages
 .claude/settings.json   verificações automáticas do Claude Code (início e fim de cada resposta)
 CLAUDE.md               regras de trabalho para o Claude Code neste projeto
-arquivos para compartilhar/  versões de arquivo único guardadas para enviar a outras pessoas
+arquivo-para-compartilhar/  versões de arquivo único guardadas para enviar a outras pessoas
 index.html              marcação da interface
 public/                 manifesto do PWA e ícones (copiados como estão para dist/)
 src/main.ts             controlador: estado, presets, fila, comparador, downloads

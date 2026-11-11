@@ -4,7 +4,7 @@ type Dict = Record<string, any>;
 const pt: Dict = {
   locale: 'pt-BR', title: 'ToolBox Web',
   lead: 'Redimensione e amplie imagens com IA, enquadre, ajuste e exporte em lote. Tudo roda no seu navegador: as imagens não saem do seu computador.',
-  tabsAria: 'Ferramentas', tabResize: 'Redimensionar', tabFrame: 'Enquadrar', tabAdjust: 'Ajustes', tabWm: 'Marca d’água', tabExport: 'Exportar', tabActive: 'em uso',
+  stepImages: 'Imagens', stepSettings: 'Configurações', stepResult: 'Resultado', secResize: 'Tamanho e IA', inUse: 'em uso', logoLabel: 'Logo',
   langGroup: 'Idioma', toDark: 'Usar modo escuro', toLight: 'Usar modo claro', settings: 'Configurações',
   presetLabel: 'Preset', presetDefault: 'Padrão', presetShop: 'E-commerce 2048 quadrado', presetMarket: 'Marketplace 1200 fundo branco',
   presetWeb: 'Web leve (WebP até 150 KB)', presetCustom: 'Personalizado', presetSave: 'Salvar como preset', presetDelete: 'Excluir preset',
@@ -62,7 +62,7 @@ const pt: Dict = {
 const es: Dict = {
   ...pt, locale: 'es', title: 'ToolBox Web',
   lead: 'Redimensiona y amplía imágenes con IA, encuadra, ajusta y exporta en lote. Todo se ejecuta en tu navegador: las imágenes no salen de tu computadora.',
-  tabsAria: 'Herramientas', tabResize: 'Redimensionar', tabFrame: 'Encuadre', tabAdjust: 'Ajustes', tabWm: 'Marca de agua', tabExport: 'Exportar', tabActive: 'en uso',
+  stepImages: 'Imágenes', stepSettings: 'Configuración', stepResult: 'Resultado', secResize: 'Tamaño e IA', inUse: 'en uso', logoLabel: 'Logo',
   langGroup: 'Idioma', toDark: 'Usar modo oscuro', toLight: 'Usar modo claro', settings: 'Configuración',
   presetLabel: 'Preset', presetDefault: 'Predeterminado', presetShop: 'E-commerce 2048 cuadrado', presetMarket: 'Marketplace 1200 fondo blanco',
   presetWeb: 'Web liviana (WebP hasta 150 KB)', presetCustom: 'Personalizado', presetSave: 'Guardar como preset', presetDelete: 'Eliminar preset',
@@ -120,7 +120,7 @@ const es: Dict = {
 const en: Dict = {
   ...pt, locale: 'en', title: 'ToolBox Web',
   lead: 'Resize and upscale images with AI, then frame, adjust and export in bulk. Everything runs in your browser: your images never leave your computer.',
-  tabsAria: 'Tools', tabResize: 'Resize', tabFrame: 'Framing', tabAdjust: 'Adjust', tabWm: 'Watermark', tabExport: 'Export', tabActive: 'in use',
+  stepImages: 'Images', stepSettings: 'Settings', stepResult: 'Result', secResize: 'Size and AI', inUse: 'in use', logoLabel: 'Logo',
   langGroup: 'Language', toDark: 'Switch to dark mode', toLight: 'Switch to light mode', settings: 'Settings',
   presetLabel: 'Preset', presetDefault: 'Default', presetShop: 'E-commerce 2048 square', presetMarket: 'Marketplace 1200 white background',
   presetWeb: 'Light web (WebP up to 150 KB)', presetCustom: 'Custom', presetSave: 'Save as preset', presetDelete: 'Delete preset',

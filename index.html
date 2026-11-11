@@ -35,138 +35,17 @@ try { var t = localStorage.getItem('toolbox.theme') || localStorage.getItem('amp
     </div>
   </header>
 
-  <div class="layout">
-    <aside class="panel" data-i18n-aria="settings" aria-label="Configurações">
-      <section class="block preset-block">
-        <label class="label" for="preset" data-i18n="presetLabel">Preset</label>
-        <div class="preset-row">
-          <select id="preset" class="select"></select>
-          <button type="button" class="icon-btn" id="presetSave" data-i18n-aria="presetSave"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-          <button type="button" class="icon-btn" id="presetDelete" data-i18n-aria="presetDelete" hidden><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 7h14M10 11v6M14 11v6M7 7l1 12h8l1-12M9 7V5h6v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <main class="flow">
+    <!-- 1. Imagens -->
+    <section class="step" aria-labelledby="stepImagesTitle">
+      <div class="step-head">
+        <span class="step-num" aria-hidden="true">1</span>
+        <h2 id="stepImagesTitle" data-i18n="stepImages">Imagens</h2>
+        <span class="count" id="count" hidden></span>
+        <div class="step-tools">
+          <button class="link small" id="clear" type="button" hidden data-i18n="clear">Limpar lista</button>
         </div>
-        <div class="preset-form" id="presetForm" hidden>
-          <input type="text" id="presetName" class="text" maxlength="40" data-i18n-ph="presetNamePh">
-          <button type="button" class="ghost small" id="presetConfirm" data-i18n="presetConfirm">Salvar</button>
-          <button type="button" class="link small" id="presetCancel" data-i18n="presetCancel">Cancelar</button>
-        </div>
-      </section>
-
-      <div class="tabs" role="tablist" data-i18n-aria="tabsAria" aria-label="Ferramentas">
-        <button type="button" role="tab" class="tab" id="tab-resize" data-tab="resize" aria-controls="pane-resize" aria-selected="true" tabindex="0"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="tabResize"></span></button>
-        <button type="button" role="tab" class="tab" id="tab-frame" data-tab="frame" aria-controls="pane-frame" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 2v14a2 2 0 0 0 2 2h14M2 6h14a2 2 0 0 1 2 2v14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="tabFrame"></span><i class="dot" hidden></i><span class="sr" data-i18n="tabActive" hidden></span></button>
-        <button type="button" role="tab" class="tab" id="tab-adjust" data-tab="adjust" aria-controls="pane-adjust" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="6" r="2" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="12" r="2" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="18" r="2" stroke="currentColor" stroke-width="2"/></svg><span data-i18n="tabAdjust"></span><i class="dot" hidden></i><span class="sr" data-i18n="tabActive" hidden></span></button>
-        <button type="button" role="tab" class="tab" id="tab-wm" data-tab="wm" aria-controls="pane-wm" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3s6 6.2 6 10.5A6 6 0 0 1 6 13.5C6 9.2 12 3 12 3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9.5 14.5a2.6 2.6 0 0 0 2.5 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span data-i18n="tabWm"></span><i class="dot" hidden></i><span class="sr" data-i18n="tabActive" hidden></span></button>
-        <button type="button" role="tab" class="tab" id="tab-export" data-tab="export" aria-controls="pane-export" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="tabExport"></span></button>
       </div>
-
-      <div class="pane" role="tabpanel" id="pane-resize" aria-labelledby="tab-resize" tabindex="0">
-        <section class="block">
-          <p class="label" id="modeLabel" data-i18n="modeLegend">O que fazer</p>
-          <div class="seg seg-wide" role="radiogroup" aria-labelledby="modeLabel">
-            <label><input type="radio" name="mode" value="ai"><span data-i18n="modeAi">Ampliar com IA</span></label>
-            <label><input type="radio" name="mode" value="restore"><span data-i18n="modeRestore">Restaurar</span></label>
-            <label><input type="radio" name="mode" value="convert"><span data-i18n="modeConvert">Só converter</span></label>
-          </div>
-          <p class="hint" id="modeHint"></p>
-        </section>
-        <section class="block" id="sizeBlock">
-          <p class="label" id="sizeLabel" data-i18n="sizeLegend">Tamanho final</p>
-          <div class="chips" id="sizeChips" role="radiogroup" aria-labelledby="sizeLabel"></div>
-          <p class="hint" id="sizeHint" aria-live="polite"></p>
-          <p class="label sub" id="extraLabel" data-i18n="extraLegend">Tamanhos extras</p>
-          <div class="chips small-chips" id="extraChips" role="group" aria-labelledby="extraLabel"></div>
-          <p class="hint" data-i18n="extraHint"></p>
-        </section>
-        <section class="block">
-          <label class="check"><input type="checkbox" id="tones"> <span data-i18n="tones">Manter tons originais</span></label>
-          <p class="hint" data-i18n="tonesHint"></p>
-        </section>
-      </div>
-
-      <div class="pane" role="tabpanel" id="pane-frame" aria-labelledby="tab-frame" tabindex="0" hidden>
-        <section class="block">
-          <p class="label" id="aspectLabel" data-i18n="aspectLabel">Proporção</p>
-          <div class="chips small-chips" id="aspectChips" role="radiogroup" aria-labelledby="aspectLabel"></div>
-        </section>
-        <section class="block">
-          <label class="check first"><input type="checkbox" id="center"> <span data-i18n="center">Centralizar produto</span></label>
-          <div class="range-row" id="marginRow">
-            <span data-i18n="marginLabel">Margem</span><input type="range" id="margin" min="0" max="25" step="1"><output id="marginOut"></output>
-          </div>
-          <p class="hint" data-i18n="centerHint"></p>
-        </section>
-        <section class="block">
-          <div class="color-row">
-            <span class="label flat" data-i18n="bgLegend">Cor de fundo</span>
-            <label class="color"><input type="color" id="bg" data-i18n-aria="bgLegend"><span id="bgHex"></span></label>
-          </div>
-          <p class="hint" data-i18n="bgHint"></p>
-          <label class="check"><input type="checkbox" id="whiteBg"> <span data-i18n="whiteBg">Fundo branco puro</span></label>
-          <p class="hint" data-i18n="whiteBgHint"></p>
-        </section>
-      </div>
-
-      <div class="pane" role="tabpanel" id="pane-adjust" aria-labelledby="tab-adjust" tabindex="0" hidden>
-        <section class="block">
-          <div class="range-row first"><span data-i18n="brightness">Brilho</span><input type="range" id="brightness" min="-100" max="100"><output></output></div>
-          <div class="range-row"><span data-i18n="contrast">Contraste</span><input type="range" id="contrast" min="-100" max="100"><output></output></div>
-          <div class="range-row"><span data-i18n="saturation">Saturação</span><input type="range" id="saturation" min="-100" max="100"><output></output></div>
-          <div class="range-row"><span data-i18n="sharpness">Nitidez</span><input type="range" id="sharpen" min="0" max="100"><output></output></div>
-          <button type="button" class="link small" id="resetAdjust" data-i18n="resetAdjust">Zerar ajustes</button>
-        </section>
-      </div>
-
-      <div class="pane" role="tabpanel" id="pane-wm" aria-labelledby="tab-wm" tabindex="0" hidden>
-        <section class="block">
-          <label class="check first"><input type="checkbox" id="wmOn"> <span data-i18n="wmOn">Aplicar marca d’água</span></label>
-          <div class="wm-logo">
-            <div class="wm-preview" id="wmPreview"></div>
-            <div>
-              <input type="file" id="wmFile" accept="image/png,image/svg+xml,image/webp,image/jpeg" hidden>
-              <button type="button" class="ghost small" id="wmPick" data-i18n="wmPick">Escolher logo</button>
-              <button type="button" class="link small" id="wmRemove" data-i18n="wmRemove" hidden>Remover logo</button>
-            </div>
-          </div>
-          <p class="hint" id="wmNoLogo" data-i18n="wmNoLogo"></p>
-        </section>
-        <section class="block">
-          <p class="label" id="wmPosLabel" data-i18n="wmPos">Posição</p>
-          <div class="pos-grid" id="wmPos" role="radiogroup" aria-labelledby="wmPosLabel"></div>
-          <div class="range-row"><span data-i18n="wmOpacity">Opacidade</span><input type="range" id="wmOpacity" min="10" max="100"><output></output></div>
-          <div class="range-row"><span data-i18n="wmScale">Tamanho</span><input type="range" id="wmScale" min="5" max="50"><output></output></div>
-        </section>
-      </div>
-
-      <div class="pane" role="tabpanel" id="pane-export" aria-labelledby="tab-export" tabindex="0" hidden>
-        <section class="block">
-          <p class="label" id="fmtLabel" data-i18n="fmtLegend">Formato</p>
-          <div class="seg" role="radiogroup" aria-labelledby="fmtLabel">
-            <label><input type="radio" name="fmt" value="jpg"><span>JPG</span></label>
-            <label><input type="radio" name="fmt" value="png"><span>PNG</span></label>
-            <label><input type="radio" name="fmt" value="webp"><span>WebP</span></label>
-            <label><input type="radio" name="fmt" value="avif"><span>AVIF</span></label>
-          </div>
-          <p class="hint" id="fmtHint"></p>
-        </section>
-        <section class="block" id="lossyOpts">
-          <div class="range-row first"><span data-i18n="qualityLabel">Qualidade</span><input type="range" id="quality" min="30" max="100"><output></output></div>
-          <label class="label sub" for="targetKB" data-i18n="targetLabel">Tamanho máximo do arquivo</label>
-          <div class="unit-input"><input type="number" id="targetKB" class="text" min="0" step="10" inputmode="numeric" data-i18n-ph="targetPh"><span>KB</span></div>
-          <p class="hint" data-i18n="targetHint"></p>
-        </section>
-        <section class="block" id="pngOpts">
-          <label class="check first"><input type="checkbox" id="pngLossy"> <span data-i18n="pngLossy">PNG com perda</span></label>
-          <p class="hint" data-i18n="pngLossyHint"></p>
-        </section>
-        <section class="block">
-          <label class="label" for="pattern" data-i18n="nameLegend">Nome dos arquivos</label>
-          <input type="text" id="pattern" class="text mono" spellcheck="false">
-          <p class="hint" data-i18n="nameHint"></p>
-        </section>
-      </div>
-    </aside>
-
-    <main class="work">
       <div class="drop" id="drop" role="button" tabindex="0" aria-describedby="dropSub">
         <input type="file" id="file" multiple hidden>
         <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
@@ -182,48 +61,235 @@ try { var t = localStorage.getItem('toolbox.theme') || localStorage.getItem('amp
           <p class="drop-sub" id="dropSub"><span data-i18n="dropOr">ou</span> <button type="button" class="link" id="pick" data-i18n="dropPick">escolha no computador</button><span data-i18n="dropFormats"></span></p>
         </div>
       </div>
-
-      <div class="actions">
-        <button class="primary" id="go" type="button" disabled>Processar imagens</button>
-        <button class="ghost" id="clear" type="button" hidden data-i18n="clear">Limpar lista</button>
-        <p class="status" id="engine" role="status"></p>
-      </div>
-
       <ul class="list" id="list" data-i18n-aria="listAria" aria-label="Imagens" hidden></ul>
-      <div class="list-foot" id="listFoot" hidden>
-        <p class="total" id="total"></p>
-        <div class="foot-actions">
-          <button class="ghost" id="saveFolder" type="button" hidden data-i18n="saveFolder">Salvar numa pasta…</button>
-          <button class="primary" id="zipBtn" type="button" disabled>Baixar todas</button>
+    </section>
+
+    <!-- 2. Configurações -->
+    <section class="step" id="settings" aria-labelledby="stepSettingsTitle">
+      <div class="step-head">
+        <span class="step-num" aria-hidden="true">2</span>
+        <h2 id="stepSettingsTitle" data-i18n="stepSettings">Configurações</h2>
+        <div class="step-tools preset">
+          <label class="preset-label" for="preset" data-i18n="presetLabel">Preset</label>
+          <select id="preset" class="select"></select>
+          <button type="button" class="icon-btn" id="presetSave" data-i18n-aria="presetSave"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <button type="button" class="icon-btn" id="presetDelete" data-i18n-aria="presetDelete" hidden><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 7h14M10 11v6M14 11v6M7 7l1 12h8l1-12M9 7V5h6v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
-        <p class="hint" id="zipHint"></p>
+      </div>
+      <div class="preset-form" id="presetForm" hidden>
+        <input type="text" id="presetName" class="text" maxlength="40" data-i18n-ph="presetNamePh">
+        <button type="button" class="ghost small" id="presetConfirm" data-i18n="presetConfirm">Salvar</button>
+        <button type="button" class="link small" id="presetCancel" data-i18n="presetCancel">Cancelar</button>
       </div>
 
-      <section class="compare-wrap" id="cmpWrap" hidden data-i18n-aria="cmpAria" aria-label="Comparação">
-        <div class="cmp-head">
-          <h2 id="cmpTitle"></h2>
-          <button class="ghost small" id="zoom" type="button" aria-pressed="false" data-i18n="zoomOn">Ver em tamanho real</button>
-        </div>
-        <div class="cmp-scroll" id="cmpScroll">
-          <div class="cmp" id="cmp">
-            <img class="before" id="before" data-i18n-alt="beforeAlt" alt="">
-            <img class="after" id="after" data-i18n-alt="afterAlt" alt="">
-            <div class="line"></div>
-            <div class="knob"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <span class="tag l" data-i18n="before">Original</span><span class="tag r" data-i18n="after">Resultado</span>
+      <section class="card" aria-labelledby="secResizeTitle">
+        <header class="card-head">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3 id="secResizeTitle" data-i18n="secResize">Tamanho e IA</h3>
+        </header>
+        <div class="field">
+          <p class="field-label" id="modeLabel" data-i18n="modeLegend">O que fazer</p>
+          <div class="field-control">
+            <div class="seg seg-wide" role="radiogroup" aria-labelledby="modeLabel">
+              <label><input type="radio" name="mode" value="ai"><span data-i18n="modeAi">Ampliar com IA</span></label>
+              <label><input type="radio" name="mode" value="restore"><span data-i18n="modeRestore">Restaurar</span></label>
+              <label><input type="radio" name="mode" value="convert"><span data-i18n="modeConvert">Só converter</span></label>
+            </div>
+            <p class="hint" id="modeHint"></p>
           </div>
         </div>
-        <div class="cmp-foot">
-          <span data-i18n="footBefore"></span>
-          <input type="range" id="slider" min="0" max="100" value="50" step="0.5" data-i18n-aria="sliderAria">
-          <span class="r" data-i18n="footAfter"></span>
+        <div class="field" id="sizeBlock">
+          <p class="field-label" id="sizeLabel" data-i18n="sizeLegend">Tamanho final</p>
+          <div class="field-control">
+            <div class="chips" id="sizeChips" role="radiogroup" aria-labelledby="sizeLabel"></div>
+            <p class="hint" id="sizeHint" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="field">
+          <p class="field-label" id="extraLabel" data-i18n="extraLegend">Tamanhos extras</p>
+          <div class="field-control">
+            <div class="chips small-chips" id="extraChips" role="group" aria-labelledby="extraLabel"></div>
+            <p class="hint" data-i18n="extraHint"></p>
+          </div>
+        </div>
+        <label class="field toggle">
+          <span class="field-label" data-i18n="tones">Manter tons originais</span>
+          <span class="field-control"><input type="checkbox" class="switch" id="tones"><span class="hint" data-i18n="tonesHint"></span></span>
+        </label>
+      </section>
+
+      <section class="card" aria-labelledby="secFrameTitle">
+        <header class="card-head">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 2v14a2 2 0 0 0 2 2h14M2 6h14a2 2 0 0 1 2 2v14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3 id="secFrameTitle" data-i18n="frameLegend">Enquadramento</h3>
+          <span class="badge" id="badge-frame" data-i18n="inUse" hidden></span>
+        </header>
+        <div class="field">
+          <p class="field-label" id="aspectLabel" data-i18n="aspectLabel">Proporção</p>
+          <div class="field-control"><div class="chips small-chips" id="aspectChips" role="radiogroup" aria-labelledby="aspectLabel"></div></div>
+        </div>
+        <label class="field toggle">
+          <span class="field-label" data-i18n="center">Centralizar produto</span>
+          <span class="field-control"><input type="checkbox" class="switch" id="center"><span class="hint" data-i18n="centerHint"></span></span>
+        </label>
+        <div class="field" id="marginRow">
+          <label class="field-label" for="margin" data-i18n="marginLabel">Margem</label>
+          <div class="field-control range"><input type="range" id="margin" min="0" max="25" step="1"><output id="marginOut"></output></div>
+        </div>
+        <div class="field">
+          <p class="field-label" data-i18n="bgLegend">Cor de fundo</p>
+          <div class="field-control">
+            <label class="color"><input type="color" id="bg" data-i18n-aria="bgLegend"><span id="bgHex"></span></label>
+            <p class="hint" data-i18n="bgHint"></p>
+          </div>
+        </div>
+        <label class="field toggle">
+          <span class="field-label" data-i18n="whiteBg">Fundo branco puro</span>
+          <span class="field-control"><input type="checkbox" class="switch" id="whiteBg"><span class="hint" data-i18n="whiteBgHint"></span></span>
+        </label>
+      </section>
+
+      <section class="card" aria-labelledby="secAdjustTitle">
+        <header class="card-head">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="6" r="2" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="12" r="2" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="18" r="2" stroke="currentColor" stroke-width="2"/></svg>
+          <h3 id="secAdjustTitle" data-i18n="adjustLegend">Cores e ajustes</h3>
+          <span class="badge" id="badge-adjust" data-i18n="inUse" hidden></span>
+          <button type="button" class="link small head-link" id="resetAdjust" data-i18n="resetAdjust">Zerar ajustes</button>
+        </header>
+        <div class="sliders">
+          <label class="range-row"><span data-i18n="brightness">Brilho</span><input type="range" id="brightness" min="-100" max="100"><output></output></label>
+          <label class="range-row"><span data-i18n="contrast">Contraste</span><input type="range" id="contrast" min="-100" max="100"><output></output></label>
+          <label class="range-row"><span data-i18n="saturation">Saturação</span><input type="range" id="saturation" min="-100" max="100"><output></output></label>
+          <label class="range-row"><span data-i18n="sharpness">Nitidez</span><input type="range" id="sharpen" min="0" max="100"><output></output></label>
         </div>
       </section>
 
-      <p class="note" id="saveNote" hidden data-i18n="saveNote"></p>
-      <p class="note"><span data-i18n="noteModel"></span> <span id="accel"></span> <span id="codecNote"></span></p>
-    </main>
-  </div>
+      <section class="card" aria-labelledby="secWmTitle">
+        <header class="card-head">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3s6 6.2 6 10.5A6 6 0 0 1 6 13.5C6 9.2 12 3 12 3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9.5 14.5a2.6 2.6 0 0 0 2.5 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <h3 id="secWmTitle" data-i18n="wmLegend">Marca d’água</h3>
+          <span class="badge" id="badge-wm" data-i18n="inUse" hidden></span>
+        </header>
+        <label class="field toggle">
+          <span class="field-label" data-i18n="wmOn">Aplicar marca d’água</span>
+          <span class="field-control"><input type="checkbox" class="switch" id="wmOn"></span>
+        </label>
+        <div class="field">
+          <p class="field-label" data-i18n="logoLabel">Logo</p>
+          <div class="field-control">
+            <div class="wm-logo">
+              <div class="wm-preview" id="wmPreview"></div>
+              <div class="wm-logo-actions">
+                <input type="file" id="wmFile" accept="image/png,image/svg+xml,image/webp,image/jpeg" hidden>
+                <button type="button" class="ghost small" id="wmPick" data-i18n="wmPick">Escolher logo</button>
+                <button type="button" class="link small" id="wmRemove" data-i18n="wmRemove" hidden>Remover logo</button>
+              </div>
+            </div>
+            <p class="hint" id="wmNoLogo" data-i18n="wmNoLogo"></p>
+          </div>
+        </div>
+        <div class="field" id="wmOpts">
+          <p class="field-label" id="wmPosLabel" data-i18n="wmPos">Posição</p>
+          <div class="field-control wm-place">
+            <div class="pos-grid" id="wmPos" role="radiogroup" aria-labelledby="wmPosLabel"></div>
+            <div class="wm-sliders">
+              <label class="range-row"><span data-i18n="wmOpacity">Opacidade</span><input type="range" id="wmOpacity" min="10" max="100"><output></output></label>
+              <label class="range-row"><span data-i18n="wmScale">Tamanho</span><input type="range" id="wmScale" min="5" max="50"><output></output></label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="secExportTitle">
+        <header class="card-head">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3 id="secExportTitle" data-i18n="exportLegend">Exportação</h3>
+        </header>
+        <div class="field">
+          <p class="field-label" id="fmtLabel" data-i18n="fmtLegend">Formato</p>
+          <div class="field-control">
+            <div class="seg" role="radiogroup" aria-labelledby="fmtLabel">
+              <label><input type="radio" name="fmt" value="jpg"><span>JPG</span></label>
+              <label><input type="radio" name="fmt" value="png"><span>PNG</span></label>
+              <label><input type="radio" name="fmt" value="webp"><span>WebP</span></label>
+              <label><input type="radio" name="fmt" value="avif"><span>AVIF</span></label>
+            </div>
+            <p class="hint" id="fmtHint"></p>
+          </div>
+        </div>
+        <div id="lossyOpts">
+          <div class="field">
+            <label class="field-label" for="quality" data-i18n="qualityLabel">Qualidade</label>
+            <div class="field-control range"><input type="range" id="quality" min="30" max="100"><output></output></div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="targetKB" data-i18n="targetLabel">Tamanho máximo do arquivo</label>
+            <div class="field-control">
+              <div class="unit-input"><input type="number" id="targetKB" class="text" min="0" step="10" inputmode="numeric" data-i18n-ph="targetPh"><span>KB</span></div>
+              <p class="hint" data-i18n="targetHint"></p>
+            </div>
+          </div>
+        </div>
+        <label class="field toggle" id="pngOpts">
+          <span class="field-label" data-i18n="pngLossy">PNG com perda</span>
+          <span class="field-control"><input type="checkbox" class="switch" id="pngLossy"><span class="hint" data-i18n="pngLossyHint"></span></span>
+        </label>
+        <div class="field">
+          <label class="field-label" for="pattern" data-i18n="nameLegend">Nome dos arquivos</label>
+          <div class="field-control">
+            <input type="text" id="pattern" class="text mono" spellcheck="false">
+            <p class="hint" data-i18n="nameHint"></p>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- Barra de ações: fica presa ao pé da tela enquanto se rola a página -->
+    <div class="dock" id="dock">
+      <div class="dock-inner">
+        <div class="dock-status">
+          <p class="status" id="engine" role="status"></p>
+          <p class="total" id="total"></p>
+        </div>
+        <div class="dock-actions">
+          <button class="ghost" id="saveFolder" type="button" hidden data-i18n="saveFolder">Salvar numa pasta…</button>
+          <button class="ghost" id="zipBtn" type="button" hidden>Baixar todas</button>
+          <button class="primary" id="go" type="button" disabled>Processar imagens</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Resultado -->
+    <section class="step compare-wrap" id="cmpWrap" hidden aria-labelledby="stepResultTitle">
+      <div class="step-head">
+        <span class="step-num" aria-hidden="true">3</span>
+        <h2 id="stepResultTitle" data-i18n="stepResult">Resultado</h2>
+        <div class="step-tools">
+          <button class="ghost small" id="zoom" type="button" aria-pressed="false" data-i18n="zoomOn">Ver em tamanho real</button>
+        </div>
+      </div>
+      <p class="cmp-name" id="cmpTitle"></p>
+      <div class="cmp-scroll" id="cmpScroll">
+        <div class="cmp" id="cmp">
+          <img class="before" id="before" data-i18n-alt="beforeAlt" alt="">
+          <img class="after" id="after" data-i18n-alt="afterAlt" alt="">
+          <div class="line"></div>
+          <div class="knob"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="tag l" data-i18n="before">Original</span><span class="tag r" data-i18n="after">Resultado</span>
+        </div>
+      </div>
+      <div class="cmp-foot">
+        <span data-i18n="footBefore"></span>
+        <input type="range" id="slider" min="0" max="100" value="50" step="0.5" data-i18n-aria="sliderAria">
+        <span class="r" data-i18n="footAfter"></span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="note" id="saveNote" hidden data-i18n="saveNote"></p>
+    <p class="note"><span data-i18n="noteModel"></span> <span id="accel"></span> <span id="codecNote"></span></p>
+  </footer>
 </div>
 
 <template id="itemTpl">

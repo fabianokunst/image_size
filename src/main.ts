@@ -15,8 +15,8 @@ const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySele
 const $$ = <T extends HTMLElement = HTMLElement>(s: string) => Array.from(document.querySelectorAll(s)) as T[];
 const el = {
   drop: $('#drop'), file: $<HTMLInputElement>('#file'), pick: $('#pick'), go: $<HTMLButtonElement>('#go'), clear: $('#clear'),
-  engine: $('#engine'), list: $('#list'), tpl: $<HTMLTemplateElement>('#itemTpl'), listFoot: $('#listFoot'), total: $('#total'),
-  zip: $<HTMLButtonElement>('#zipBtn'), zipHint: $('#zipHint'), saveFolder: $<HTMLButtonElement>('#saveFolder'),
+  engine: $('#engine'), list: $('#list'), tpl: $<HTMLTemplateElement>('#itemTpl'), total: $('#total'), count: $('#count'),
+  zip: $<HTMLButtonElement>('#zipBtn'), saveFolder: $<HTMLButtonElement>('#saveFolder'), settings: $('#settings'),
   cmpWrap: $('#cmpWrap'), cmpScroll: $('#cmpScroll'), cmp: $('#cmp'), before: $<HTMLImageElement>('#before'), after: $<HTMLImageElement>('#after'),
   slider: $<HTMLInputElement>('#slider'), zoom: $('#zoom'), cmpTitle: $('#cmpTitle'), theme: $('#theme'), accel: $('#accel'),
   codecNote: $('#codecNote'), saveNote: $('#saveNote'), modeHint: $('#modeHint'), sizeChips: $('#sizeChips'), sizeHint: $('#sizeHint'),
@@ -24,7 +24,7 @@ const el = {
   marginOut: $('#marginOut'), marginRow: $('#marginRow'), bg: $<HTMLInputElement>('#bg'), bgHex: $('#bgHex'),
   tones: $<HTMLInputElement>('#tones'), whiteBg: $<HTMLInputElement>('#whiteBg'), resetAdjust: $('#resetAdjust'),
   wmOn: $<HTMLInputElement>('#wmOn'), wmFile: $<HTMLInputElement>('#wmFile'), wmPick: $('#wmPick'), wmRemove: $('#wmRemove'),
-  wmPreview: $('#wmPreview'), wmNoLogo: $('#wmNoLogo'), wmPos: $('#wmPos'),
+  wmPreview: $('#wmPreview'), wmNoLogo: $('#wmNoLogo'), wmPos: $('#wmPos'), wmOpts: $('#wmOpts'),
   fmtHint: $('#fmtHint'), lossyOpts: $('#lossyOpts'), pngOpts: $('#pngOpts'), targetKB: $<HTMLInputElement>('#targetKB'),
   pngLossy: $<HTMLInputElement>('#pngLossy'), pattern: $<HTMLInputElement>('#pattern'),
   preset: $<HTMLSelectElement>('#preset'), presetSave: $('#presetSave'), presetDelete: $('#presetDelete'), presetForm: $('#presetForm'),
@@ -118,45 +118,23 @@ function renderControls() {
   el.wmRemove.hidden = !logo; el.wmNoLogo.hidden = !!logo;
   el.wmPick.textContent = logo ? T.wmChange : T.wmPick;
   el.wmPreview.innerHTML = logoUrl ? `<img src="${logoUrl}" alt="">` : '';
+  el.wmOpts.hidden = !S.wm.on;
   el.fmtHint.textContent = T.fmtHint[S.fmt];
   el.lossyOpts.hidden = S.fmt === 'png'; el.pngOpts.hidden = S.fmt !== 'png';
-  // indicador nas abas que estão alterando as imagens
+  // selo "em uso" nas seções que estão alterando as imagens
   const active: Record<string, boolean> = {
     frame: S.aspect !== 'orig' || S.center || S.whiteBg || S.bg.toLowerCase() !== '#ffffff',
     adjust: !!(S.brightness || S.contrast || S.saturation || S.sharpen),
     wm: S.wm.on && !!logo,
   };
-  for (const [k, on] of Object.entries(active)) {
-    const t = $('#tab-' + k);
-    (t.querySelector('.dot') as HTMLElement).hidden = !on; (t.querySelector('.sr') as HTMLElement).hidden = !on;
-  }
+  for (const [k, on] of Object.entries(active)) $('#badge-' + k).hidden = !on;
 }
 
 function settingsChanged() {
   fromUI(); saveSettings(S); markPresetCustom(); refresh();
 }
 
-/* ---------- Abas ---------- */
-const TABS = $$<HTMLButtonElement>('.tab');
-function selectTab(name: string, focus = false) {
-  if (!TABS.some(t => t.dataset.tab === name)) name = 'resize';
-  TABS.forEach(t => {
-    const on = t.dataset.tab === name;
-    t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
-    $('#pane-' + t.dataset.tab).hidden = !on;
-    if (on && focus) t.focus();
-  });
-  try { localStorage.setItem('toolbox.tab', name); } catch (e) { /* ignora */ }
-}
-TABS.forEach((t, i) => {
-  t.addEventListener('click', () => selectTab(t.dataset.tab!));
-  t.addEventListener('keydown', e => {
-    const k = e.key, n = TABS.length;
-    const j = k === 'ArrowRight' ? (i + 1) % n : k === 'ArrowLeft' ? (i - 1 + n) % n : k === 'Home' ? 0 : k === 'End' ? n - 1 : -1;
-    if (j >= 0) { e.preventDefault(); selectTab(TABS[j].dataset.tab!, true); }
-  });
-});
-selectTab((() => { try { return localStorage.getItem('toolbox.tab') || 'resize'; } catch (e) { return 'resize'; } })());
+try { localStorage.removeItem('toolbox.tab'); } catch (e) { /* ignora: as abas não existem mais */ }
 
 /* ---------- Presets ---------- */
 function renderPresets() {
@@ -433,10 +411,17 @@ function refresh() {
   else if (!busy && engMsg.key === 'needsAI') setEngine(engine === 'slow' ? 'engSlow' : null);
   if (!busy && engine === 'ready' && (!engMsg.key || engMsg.key === 'engReady')) setEngine(items.length ? null : 'engReady');
   const done = readyItems();
-  el.listFoot.hidden = !items.length; el.clear.hidden = !items.length || busy; el.list.hidden = !items.length;
-  el.zip.disabled = !done.length || busy || zipBusy;
+  el.count.hidden = !items.length; el.count.textContent = String(items.length);
+  el.drop.classList.toggle('compact', items.length > 0);
+  el.clear.hidden = !items.length || busy; el.list.hidden = !items.length;
+  // sem nada pendente e com resultado pronto, o próximo passo da barra é baixar
+  const finished = !busy && !todo && done.length > 0;
+  el.go.hidden = finished;
+  el.zip.hidden = !done.length;
+  el.zip.disabled = busy || zipBusy;
+  el.zip.classList.toggle('primary', finished); el.zip.classList.toggle('ghost', !finished);
   if (!zipBusy) el.zip.textContent = T.zipAll(done.length);
-  el.zipHint.textContent = done.length > 1 || done.some(it => it.outputs!.length > 1) ? T.zipHint : '';
+  el.zip.title = done.length > 1 || done.some(it => it.outputs!.length > 1) ? T.zipHint : '';
   el.saveFolder.hidden = !('showDirectoryPicker' in window) || inFrame || !done.length;
   if (done.length) {
     const a = done.reduce((t, it) => t + it.bytes, 0), b = done.reduce((t, it) => t + it.outputs![0].blob.size, 0);
@@ -498,13 +483,13 @@ el.resetAdjust.addEventListener('click', () => {
 buildControls();
 applyStatic(lang);
 toUI();
-document.querySelector('.panel')!.addEventListener('input', e => {
+el.settings.addEventListener('input', e => {
   const t = e.target as HTMLElement;
   if (t.id === 'custom') ($('#customRadio') as HTMLInputElement).checked = true;
   if (t.id === 'presetName' || t.id === 'wmFile') return;
   settingsChanged();
 });
-document.querySelector('.panel')!.addEventListener('change', e => { if ((e.target as HTMLElement).id !== 'preset' && (e.target as HTMLElement).id !== 'wmFile') settingsChanged(); });
+el.settings.addEventListener('change', e => { const id = (e.target as HTMLElement).id; if (id !== 'preset' && id !== 'wmFile' && id !== 'presetName') settingsChanged(); });
 $<HTMLInputElement>('#custom').addEventListener('focus', () => { ($('#customRadio') as HTMLInputElement).checked = true; settingsChanged(); });
 renderPresets(); renderTheme(); renderEngine(); refresh();
 
@@ -527,7 +512,7 @@ setTimeout(async () => {
   } catch (e) { console.error(e); engine = 'error'; setEngine('engError', [], true); }
   refresh();
 }, 30);
-if (!__SINGLE__ && 'serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !inFrame) {
+if (!__SINGLE__ && import.meta.env.PROD && 'serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !inFrame) {
   navigator.serviceWorker.register('./sw.js').catch(() => { /* sem cache offline */ });
 }
 void DEFAULTS;
