@@ -4,23 +4,17 @@ Caixa de ferramentas web para imagens: redimensionar e ampliar com IA, enquadrar
 
 ## Como a página é organizada
 
-Tudo fica numa única rolagem, na ordem do trabalho. Todas as opções se combinam num único processamento.
-
-| Etapa | O que tem |
-|---|---|
-| **1 Imagens** | Área para arrastar ou escolher as imagens; lista com miniatura, dimensões, tamanho antes/depois e download de cada uma |
-| **2 Configurações** | Preset no topo e as seções abaixo, sempre visíveis. As que estão alterando as imagens mostram o selo “em uso” |
-| **3 Resultado** | Comparador antes/depois da imagem escolhida na lista, com zoom em tamanho real |
+Duas colunas. À esquerda, o painel de configurações: o preset no topo e todas as seções em sequência, numa rolagem contínua (o título da seção atual fica preso no topo do painel). À direita, a área de trabalho: soltar imagens, **Processar**, lista com miniatura, tamanho antes/depois e download de cada imagem, **Baixar todas** e o comparador antes/depois. Todas as opções se combinam num único processamento; seções que estão alterando as imagens mostram o selo “em uso”.
 
 | Seção | O que tem |
 |---|---|
-| **Tamanho e IA** | Ampliar com IA, Restaurar ou Só converter; tamanho final; tamanhos extras; manter tons originais |
-| **Enquadramento** | Proporção, centralizar produto com margem, cor de fundo, fundo branco puro |
-| **Cores e ajustes** | Brilho, contraste, saturação, nitidez |
+| **Redimensionar** | Ampliar com IA, Restaurar ou Só converter; tamanho final; tamanhos extras; manter tons originais |
+| **Enquadrar** | Proporção, centralizar produto com margem, cor de fundo, fundo branco puro |
+| **Ajustes** | Brilho, contraste, saturação, nitidez |
 | **Marca d'água** | Logo, posição, opacidade, tamanho (as opções aparecem ao ligar a marca d'água) |
-| **Exportação** | Formato, qualidade, tamanho máximo em KB, PNG com perda, padrão de nome |
+| **Exportar** | Formato, qualidade, tamanho máximo em KB, PNG com perda, padrão de nome |
 
-A barra de ações fica presa ao pé da tela: mostra o andamento e o botão **Processar**; quando tudo está pronto, vira **Baixar todas** (e **Salvar numa pasta** no Chrome/Edge).
+No celular, a ordem é: imagens, lista, configurações; o botão **Processar** fica preso ao pé da tela.
 
 ## Funções em detalhe
 

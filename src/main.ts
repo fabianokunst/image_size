@@ -15,8 +15,8 @@ const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySele
 const $$ = <T extends HTMLElement = HTMLElement>(s: string) => Array.from(document.querySelectorAll(s)) as T[];
 const el = {
   drop: $('#drop'), file: $<HTMLInputElement>('#file'), pick: $('#pick'), go: $<HTMLButtonElement>('#go'), clear: $('#clear'),
-  engine: $('#engine'), list: $('#list'), tpl: $<HTMLTemplateElement>('#itemTpl'), total: $('#total'), count: $('#count'),
-  zip: $<HTMLButtonElement>('#zipBtn'), saveFolder: $<HTMLButtonElement>('#saveFolder'), settings: $('#settings'),
+  engine: $('#engine'), list: $('#list'), tpl: $<HTMLTemplateElement>('#itemTpl'), listFoot: $('#listFoot'), total: $('#total'),
+  zip: $<HTMLButtonElement>('#zipBtn'), zipHint: $('#zipHint'), saveFolder: $<HTMLButtonElement>('#saveFolder'), settings: $('#settings'),
   cmpWrap: $('#cmpWrap'), cmpScroll: $('#cmpScroll'), cmp: $('#cmp'), before: $<HTMLImageElement>('#before'), after: $<HTMLImageElement>('#after'),
   slider: $<HTMLInputElement>('#slider'), zoom: $('#zoom'), cmpTitle: $('#cmpTitle'), theme: $('#theme'), accel: $('#accel'),
   codecNote: $('#codecNote'), saveNote: $('#saveNote'), modeHint: $('#modeHint'), sizeChips: $('#sizeChips'), sizeHint: $('#sizeHint'),
@@ -411,17 +411,11 @@ function refresh() {
   else if (!busy && engMsg.key === 'needsAI') setEngine(engine === 'slow' ? 'engSlow' : null);
   if (!busy && engine === 'ready' && (!engMsg.key || engMsg.key === 'engReady')) setEngine(items.length ? null : 'engReady');
   const done = readyItems();
-  el.count.hidden = !items.length; el.count.textContent = String(items.length);
   el.drop.classList.toggle('compact', items.length > 0);
-  el.clear.hidden = !items.length || busy; el.list.hidden = !items.length;
-  // sem nada pendente e com resultado pronto, o próximo passo da barra é baixar
-  const finished = !busy && !todo && done.length > 0;
-  el.go.hidden = finished;
-  el.zip.hidden = !done.length;
-  el.zip.disabled = busy || zipBusy;
-  el.zip.classList.toggle('primary', finished); el.zip.classList.toggle('ghost', !finished);
+  el.listFoot.hidden = !items.length; el.clear.hidden = !items.length || busy; el.list.hidden = !items.length;
+  el.zip.disabled = !done.length || busy || zipBusy;
   if (!zipBusy) el.zip.textContent = T.zipAll(done.length);
-  el.zip.title = done.length > 1 || done.some(it => it.outputs!.length > 1) ? T.zipHint : '';
+  el.zipHint.textContent = done.length > 1 || done.some(it => it.outputs!.length > 1) ? T.zipHint : '';
   el.saveFolder.hidden = !('showDirectoryPicker' in window) || inFrame || !done.length;
   if (done.length) {
     const a = done.reduce((t, it) => t + it.bytes, 0), b = done.reduce((t, it) => t + it.outputs![0].blob.size, 0);
