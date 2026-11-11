@@ -39,11 +39,12 @@ npm run build:single # dist-single/toolbox-web.html → um único arquivo com tu
 npm run build:all    # os dois acima
 npm run preview      # serve o dist/ localmente para testar o build
 npm run typecheck    # checagem de tipos
+npm run check        # verificação completa: igual ao GitHub? tipos, build, último deploy e site no ar
 ```
 
 ## Publicar
 
-O site é publicado automaticamente no **GitHub Pages** (https://fabianokunst.github.io/image_size/) a cada push na branch `main`, pelo workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): instala as dependências, checa os tipos, gera `dist/` e publica.
+O site é publicado automaticamente no **GitHub Pages** (https://fabianokunst.github.io/image_size/) a cada push na branch `main`, pelo workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): instala as dependências, checa os tipos, gera `dist/` e a versão de arquivo único, e publica. A versão de arquivo único fica em https://fabianokunst.github.io/image_size/toolbox-web.html.
 
 Configuração única no GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 
@@ -55,6 +56,9 @@ Para uso sem internet nem servidor, distribua `dist-single/toolbox-web.html`: ab
 
 ```
 .github/workflows/      publicação automática no GitHub Pages
+.claude/settings.json   verificações automáticas do Claude Code (início e fim de cada resposta)
+CLAUDE.md               regras de trabalho para o Claude Code neste projeto
+arquivos para compartilhar/  versões de arquivo único guardadas para enviar a outras pessoas
 index.html              marcação da interface
 public/                 manifesto do PWA e ícones (copiados como estão para dist/)
 src/main.ts             controlador: estado, presets, fila, comparador, downloads
@@ -69,6 +73,7 @@ src/i18n.ts             textos PT/ES/EN
 src/model/              pesos da rede (float16, 2,4 MB)
 src/sw-template.js      service worker (gerado com a lista de arquivos no build)
 scripts/prepare-codecs.mjs  copia os carregadores dos codecs para src/vendor sem a busca automática do .wasm
+scripts/check.mjs       verificação do projeto contra o GitHub (npm run check e hooks do Claude Code)
 
 gerados (fora do git):
 src/vendor/             carregadores dos codecs, criados pelo npm install

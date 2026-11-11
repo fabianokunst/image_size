@@ -10,6 +10,7 @@
     "build:all": "vite build && vite build --mode single",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
+    "check": "node scripts/check.mjs",
     "postinstall": "node scripts/prepare-codecs.mjs"
   },
   "devDependencies": {
